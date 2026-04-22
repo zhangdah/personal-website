@@ -59,5 +59,35 @@ document.addEventListener('DOMContentLoaded', () => {
         el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(el);
     });
+
+    // Products list/grid view toggle
+    const productsGrid = document.querySelector('.products-grid');
+    const toggleButtons = document.querySelectorAll('.view-toggle-btn');
+
+    if (productsGrid && toggleButtons.length) {
+        const STORAGE_KEY = 'products-view';
+        const savedView = localStorage.getItem(STORAGE_KEY);
+
+        const applyView = (view) => {
+            productsGrid.setAttribute('data-view', view);
+            toggleButtons.forEach(btn => {
+                const isActive = btn.dataset.view === view;
+                btn.classList.toggle('active', isActive);
+                btn.setAttribute('aria-pressed', String(isActive));
+            });
+        };
+
+        if (savedView === 'list' || savedView === 'grid') {
+            applyView(savedView);
+        }
+
+        toggleButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const view = btn.dataset.view;
+                applyView(view);
+                localStorage.setItem(STORAGE_KEY, view);
+            });
+        });
+    }
 });
 
